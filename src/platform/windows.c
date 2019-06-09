@@ -173,14 +173,18 @@ ssize_t monome_platform_write(monome_t *monome, const uint8_t *buf, size_t nbyte
 		return -1;
 	}
 
-	if( !WriteFile(hres, buf, nbyte, &written, &ov) ) {
-		if( GetLastError() != ERROR_IO_PENDING ) {
+	if (!WriteFile(hres, buf, nbyte, NULL, &ov)) {
+		if (GetLastError() != ERROR_IO_PENDING) {
 			fprintf(stderr, "monome_platform_write(): write failed (%ld)\n",
 					GetLastError());
 			return -1;
 		}
+	}
 
-		GetOverlappedResult(hres, &ov, &written, TRUE);
+	if (!GetOverlappedResult(hres, &ov, &written, TRUE)) {
+		fprintf(stderr, "monome_platform_write(): GetOverlappedResult failed (%ld)\n",
+				GetLastError());
+		return -1;
 	}
 
 	CloseHandle(ov.hEvent);
@@ -199,14 +203,19 @@ ssize_t monome_platform_read(monome_t *monome, uint8_t *buf, size_t nbyte) {
 		return -1;
 	}
 
-	if( !ReadFile(hres, buf, nbyte, &read, &ov) ) {
-		if( GetLastError() != ERROR_IO_PENDING ) {
+	if (!ReadFile(hres, buf, nbyte, NULL, &ov)) {
+		if (GetLastError() != ERROR_IO_PENDING) {
 			fprintf(stderr, "monome_platform_read(): read failed (%ld)\n",
 					GetLastError());
 			return -1;
 		}
 
-		GetOverlappedResult(hres, &ov, &read, TRUE);
+	}
+
+	if (!GetOverlappedResult(hres, &ov, &read, TRUE)) {
+		fprintf(stderr, "monome_platform_read(): GetOverlappedResult failed (%ld)\n",
+				GetLastError());
+		return -1;
 	}
 
 	CloseHandle(ov.hEvent);
