@@ -43,7 +43,7 @@ void handle_press(const monome_event_t *e, void *data) {
 int main(int argc, char *argv[]) {
 	monome_t *monome;
 
-	const char *device_path = "/dev/tty.usbserial-m1000364";
+	const char *device_path = "/dev/ttyUSB0";
 	if (argc > 1) {
 	  device_path = argv[1];
 	}
