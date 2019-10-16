@@ -50,9 +50,10 @@ int main(int argc, char *argv[]) {
 
 
 	/* open the monome device */
-	if( !(monome = monome_open(device_path)) )
-	  fprintf(stderr, "error opening device: %s\n", device_path);
-		return -1;
+	if( !(monome = monome_open(device_path)) ) {
+	    fprintf(stderr, "error opening device: %s\n", device_path);
+	    return -1;
+	}
 
 	monome_led_all(monome, 0);
 
